@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.87.1",
+    "fs": "^0.0.1-security",
     "next": "15.5.2",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

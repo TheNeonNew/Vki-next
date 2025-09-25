@@ -3,6 +3,7 @@ import { dehydrate } from '@tanstack/react-query';
 import TanStackQuery from '@/containers/TanStackQuery';
 import queryClient from '@/api/reactQueryClient';
 import { getGroupsApi } from '@/api/groupsApi';
+import { getStudentsApi } from '@/api/studentsApi';
 import GroupInterface from '@/types/GroupInterface';
 import Header from '@/components/layout/Header/Header';
 import Footer from '@/components/layout/Footer/Footer';
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
 
 const RootLayout = async ({ children }: Readonly<{children: React.ReactNode}>) => {  
   let groups: GroupInterface[];
+  let students: GroupInterface[];
 
   // выполняется на сервере - загрузка групп
   await queryClient.prefetchQuery({
@@ -27,6 +29,18 @@ const RootLayout = async ({ children }: Readonly<{children: React.ReactNode}>) =
       groups = await getGroupsApi();
       console.log('Groups', groups);
       return groups;
+    }
+  });
+
+  
+
+  // выполняется на сервере - загрузка групп
+  await queryClient.prefetchQuery({
+    queryKey: ['students'], 
+    queryFn: async () => {
+      students = await getStudentsApi();
+      console.log('Students', students);
+      return students;
     }
   });
 
