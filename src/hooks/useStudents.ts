@@ -1,24 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
-import { getGroupsApi } from '@/api/groupsApi';
+import { getStudentsApi } from '@/api/studentsApi';
 import type GroupInterface from '@/types/GroupInterface';
 
-const useGroups = () => {
+
+const useStudents = () => {
   const {
     data = [],
     isLoading,
     isError,
     error,
   } = useQuery<GroupInterface[]>({
-    queryKey: ['groups'],
-    queryFn: getGroupsApi,
+    queryKey: ['students'],
+    queryFn: getStudentsApi,
   });
 
   return {
-    groups: data,
+    students: data,
     isLoading,
     isError,
     error,
   };
 };
 
-export default useGroups;
+export default useStudents;

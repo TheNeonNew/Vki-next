@@ -1,15 +1,24 @@
-import Page from '@/components/layout/Page/Page';
+'use client';
 
+import useStudents from '@/hooks/useStudents';
+import type StudentInterface from '@/types/StudentInterface';
+import styles from './Students.module.scss';
 
-const StudentsPage = (): React.ReactNode => {
+const Students = (): React.ReactElement => {
+  const { students, isLoading, isError} = useStudents();
+
   return (
-    <Page>
-      <h1>Page</h1>
-      <h2>Студенты 2</h2>
-      <h3>Студенты 3</h3>
-      <h4>Студенты 4</h4>
-    </Page>
+    <div className={styles.Students}>
+      {students.map((student: StudentInterface) => (
+        <h2 key={student.id}>
+          {student.first_name}&nbsp;
+          {student.middle_name}&nbsp;
+          {student.last_name}&nbsp;
+          <h2>Группа: {student.group_name}</h2>
+        </h2>
+      ))}
+    </div>
   );
 };
 
-export default StudentsPage;
+export default Students;

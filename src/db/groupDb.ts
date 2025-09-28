@@ -1,28 +1,23 @@
 import sqlite3 from 'sqlite3';
-import GroupInterface from '@/types/GroupInterface';
+
+import type GroupInterface from '@/types/GroupInterface';
 
 sqlite3.verbose();
 
-const db = new sqlite3.Database('./db/vki-web.db');
+export const getGroupsDb = async (): Promise<GroupInterface[]> => {
+  const db = new sqlite3.Database(process.env.DB ?? './db/vki-web.db');
 
-export const getGroupsDb = (): Promise<GroupInterface[]> => {
-  return new Promise((resolve, reject) => {
-    const groups: GroupInterface[] = [];
-
-    db.serialize(() => {
-      db.each('SELECT * FROM class', (err, row) => {
-        if (err) {
-          reject(err);
-        } else {
-          groups.push(row as GroupInterface);
-        }
-      }, (err, count) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(groups);
-        }
-      });
+  const groups = await new Promise((resolve, reject) => {
+    const sql = 'SELECT * FROM class';
+    db.all(sql, [], (err, rows) => {
+      if (err) {
+        reject(err);
+        db.close();
+        return;
+      }
+      resolve(rows);
+      db.close();
     });
   });
+  return groups as GroupInterface[];
 };

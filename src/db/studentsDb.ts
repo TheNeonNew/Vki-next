@@ -1,28 +1,32 @@
+import StudentInterface from '@/types/StudentInterface';
 import sqlite3 from 'sqlite3';
-import GroupInterface from '@/types/GroupInterface';
 
 sqlite3.verbose();
 
-const db = new sqlite3.Database('./db/vki-web.db');
+export const getStudentsDb = async (): Promise<any[]> => {
+  const db = new sqlite3.Database(process.env.DB ?? './db/vki-web.db');
 
-export const getStudentsDb = (): Promise<GroupInterface[]> => {
-  return new Promise((resolve, reject) => {
-    const groups: GroupInterface[] = [];
-
-    db.serialize(() => {
-      db.each('SELECT * FROM student', (err, row) => {
-        if (err) {
-          reject(err);
-        } else {
-          groups.push(row as GroupInterface);
-        }
-      }, (err, count) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(groups);
-        }
-      });
+  const students = await new Promise((resolve, reject) => {
+    const sql = `
+      SELECT 
+        student.id,
+        student.first_name,
+        student.last_name,
+        student.middle_name,
+        student.groupId,
+        class.name AS group_name
+      FROM student
+      JOIN class ON student.groupId = class.id
+    `;
+    db.all(sql, [], (err, rows) => {
+      db.close();
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(rows);
     });
   });
+
+  return students as StudentInterface[];
 };

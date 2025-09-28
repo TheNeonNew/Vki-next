@@ -1,12 +1,17 @@
-import { getStudentsDb } from '@/db/studentsDb';
-import GroupInterface from '@/types/GroupInterface';
+import type GroupInterface from '@/types/GroupInterface';
 
 export const getStudentsApi = async (): Promise<GroupInterface[]> => {
+  try {
+    const response = await fetch(`/api/students`);
 
-  /* TODO: groupsApi должен возвращать данные через апи,
-    не должно быть обращение в БД напрямую
-  */
-  const students = getStudentsDb();
-
-  return students;
+    if (!response.ok) {
+      throw new Error(`Ошибка HTTP: ${response.status}${response.statusText}`);
+    }
+    const groups = await response.json() as GroupInterface[];
+    return groups;
+  }
+  catch (err) {
+    console.log('>>> getStudentsApi', err);
+    return [] as GroupInterface[];
+  }
 };
