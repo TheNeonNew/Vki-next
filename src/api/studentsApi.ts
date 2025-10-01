@@ -1,17 +1,32 @@
-import type GroupInterface from '@/types/GroupInterface';
+import StudentInterface from '@/types/StudentInterface';
 
-export const getStudentsApi = async (): Promise<GroupInterface[]> => {
+export const getStudentsApi = async (): Promise<StudentInterface[]> => {
   try {
-    const response = await fetch(`/api/students`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API}/students`);
 
     if (!response.ok) {
       throw new Error(`Ошибка HTTP: ${response.status}${response.statusText}`);
     }
-    const groups = await response.json() as GroupInterface[];
-    return groups;
+    const students = await response.json() as StudentInterface[];
+    return students;
   }
   catch (err) {
     console.log('>>> getStudentsApi', err);
-    return [] as GroupInterface[];
+    return [] as StudentInterface[];
+  }
+};
+
+export const deleteStudentApi = async (studentId: number): Promise<void> => {
+  try {
+    const response = await fetch(`/api/students/${studentId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка HTTP: ${response.status} ${response.statusText}`);
+    }
+  } catch (err) {
+    console.log('>>> deleteStudentApi', err);
+    throw err;
   }
 };
