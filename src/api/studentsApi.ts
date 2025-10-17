@@ -30,3 +30,21 @@ export const deleteStudentApi = async (studentId: number): Promise<void> => {
     throw err;
   }
 };
+
+export const fillStudentsApi = async (): Promise<StudentInterface[]> => {
+  try {
+    const response = await fetch(`/api/students/fill/`, {
+      method: 'POST',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка HTTP: ${response.status}${response.statusText}`);
+    }
+    const students = await response.json() as StudentInterface[];
+    return students;
+  }
+  catch (err) {
+    console.log('>>> fillStudentsApi', err);
+    return [] as StudentInterface[];
+  }
+};

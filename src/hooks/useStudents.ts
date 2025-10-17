@@ -5,12 +5,13 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import { deleteStudentApi, getStudentsApi } from '@/api/studentsApi';
+import { deleteStudentApi, getStudentsApi, fillStudentsApi } from '@/api/studentsApi';
 import type StudentInterface from '@/types/StudentInterface';
 
 interface StudentsHookInterface {
   students: StudentInterface[];
   deleteStudentMutate: (studentId: number) => void;
+  fillStudentsMutate: () => void;
 }
 
 const useStudents = (): StudentsHookInterface => {
@@ -64,11 +65,28 @@ const useStudents = (): StudentsHookInterface => {
     //   // вызывается после выполнения запроса в случаи удачи или ошибке
     //   console.log('>> deleteStudentMutate onSettled', data, error, variables, context);
     // },
+
+  });
+
+  const fillStudentsMutate = useMutation ({
+      mutationFn: async () => fillStudentsApi(),
+      onMutate: async () => {
+        await queryClient.cancelQueries({ queryKey: ['students'] });
+        const previousStudents = queryClient.getQueryData<StudentInterface[]>(['students']);
+        let updatedStudents = [...(previousStudents ?? [])] ;
+        if (!updatedStudents) return;
+        queryClient.setQueryData<StudentInterface[]>(['students'], updatedStudents);
+        return { updatedStudents };
+      },
+      onSuccess: async () => {
+
+      },
   });
 
   return {
     students: data ?? [],
     deleteStudentMutate: deleteStudentMutate.mutate,
+    fillStudentsMutate: fillStudentsMutate.mutate
   };
 };
 

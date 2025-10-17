@@ -80,7 +80,7 @@ export const addRandomStudentsDb = async (amount: number = 10): Promise<FioInter
   }
 
   await new Promise((resolve, reject) => {
-    db.run(`INSERT INTO student (firstName, lastName, middleName, groupId) VALUES ${fiosInsert}`, [], (err) => {
+    db.run(`INSERT INTO student (first_name, last_name, middle_name, groupId) VALUES ${fiosInsert}`, [], (err) => {
       if (err) {
         reject(err);
         db.close();

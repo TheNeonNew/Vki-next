@@ -1,4 +1,4 @@
-import { addRandomStudentsDb } from '@/db/studentDb';
+import { addRandomStudentsDb } from '@/db/studentsDb';
 
 export async function POST(): Promise<Response> {
   const students = await addRandomStudentsDb();
