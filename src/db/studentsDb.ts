@@ -6,7 +6,7 @@ import sqlite3 from 'sqlite3';
 
 sqlite3.verbose();
 
-export const getStudentsDb = async (): Promise<any[]> => {
+export const getStudentsDb = async (): Promise<StudentInterface[]> => {
   const db = new sqlite3.Database(process.env.DB ?? './db/vki-web.db');
 
   const students = await new Promise((resolve, reject) => {
@@ -94,4 +94,24 @@ export const addRandomStudentsDb = async (amount: number = 10): Promise<FioInter
   return fios;
 };
 
-// export const deleteStudentDb = async (studentId: number): Promise<StudentInterface | null> => { const db = new sqlite3.Database(process.env.DB ?? './db/vki-web.db'); const deletedStudent = await new Promise<StudentInterface | null>((resolve, reject) => {  const selectSql = SELECT * FROM student WHERE id = ?; db.get(selectSql, [studentId], (selectErr, row) => { if (selectErr) { db.close(); reject(selectErr); return; } if (!row) { db.close(); resolve(null); return; } const deleteSql = DELETE FROM student WHERE id = ?; db.run(deleteSql, [studentId], function (deleteErr) { db.close(); if (deleteErr) { reject(deleteErr); return; } resolve(row as StudentInterface); }); }); }); return deletedStudent; };
+// Fix: Change return type to Promise<StudentInterface>
+export const addNRStudentDb = async (student: StudentInterface): Promise<StudentInterface> => {
+  const db = new sqlite3.Database(process.env.DB ?? './db/vki-web.db');
+
+  const result = await new Promise<StudentInterface>((resolve, reject) => {
+    const sql = 'INSERT INTO student(first_name, last_name, middle_name, groupId) VALUES(?, ?, ?, ?) RETURNING id';
+    db.get(sql, [student.first_name, student.last_name, student.middle_name, student.groupId], (err, row) => {
+      if (err) {
+        reject(err);
+        db.close();
+        return;
+      }
+      // @ts-ignore
+      const newStudent = { ...student, id: row.id };
+      resolve(newStudent);
+      db.close();
+    });
+  });
+
+  return result;
+}
