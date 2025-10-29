@@ -16,6 +16,10 @@ const StudentsList = () => {
     setIsAddOpen(true);
   };
 
+  const handleClose = () => {
+    setIsAddOpen(false);
+  };
+
   return (
     <>
       <table className={styles.table}>
@@ -31,12 +35,14 @@ const StudentsList = () => {
         </thead>
         <tbody>
           {students.map((student: StudentInterface, index: number) => (
-            <tr key={student.id}>
+            <tr key={student.id ? `student-${student.id}` : `temp-${index}`}>
               <td className={styles.td}>{index + 1}</td>
               <td className={styles.td}>{student.last_name}</td>
               <td className={styles.td}>{student.first_name}</td>
               <td className={styles.td}>{student.middle_name}</td>
-              <td className={styles.td}>{student.groupId}</td> 
+              <td className={styles.td}>
+                {isNaN(student.groupId) ? "N/A" : student.groupId}
+              </td>
               <td className={styles.td}>
                 <button onClick={() => deleteStudentMutate(student.id)}>
                   Удалить
@@ -48,7 +54,8 @@ const StudentsList = () => {
       </table>
       <button onClick={() => fillStudentsMutate()}>Заполнить Список Студентов</button>
       <button onClick={handleClick}>Добавить студента</button>
-      {isAddOpen && <AddStudent onSubmit={onSubmitHandler} />} 
+      {isAddOpen && <AddStudent onSubmit={onSubmitHandler} onClose={handleClose} />}
+
     </>
   );
 };

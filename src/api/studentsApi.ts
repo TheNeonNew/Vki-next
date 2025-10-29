@@ -49,10 +49,10 @@ export const fillStudentsApi = async (): Promise<StudentInterface[]> => {
   }
 };
 
-export const addStudentsApi = async (student: StudentInterface): Promise<StudentInterface[]> => {
+export const addStudentsApi = async (student: StudentInterface): Promise<StudentInterface> => {
   try {
     const response = await fetch(`/api/students/add/`, {
-      method: 'ADD',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -60,13 +60,13 @@ export const addStudentsApi = async (student: StudentInterface): Promise<Student
     });
 
     if (!response.ok) {
-      throw new Error(`Ошибка HTTP: ${response.status}${response.statusText}`);
+      throw new Error(`Ошибка HTTP: ${response.status} ${response.statusText}`);
     }
-    const students = await response.json() as StudentInterface[];
-    return students;
-  }
-  catch (err) {
-    console.log('>>> addStudentsApi', err);
-    return [] as StudentInterface[];
+
+    const newStudent = await response.json() as StudentInterface;
+    return newStudent;
+  } catch (err) {
+    console.error('>>> addStudentsApi', err);
+    throw err;
   }
 };

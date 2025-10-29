@@ -94,24 +94,27 @@ export const addRandomStudentsDb = async (amount: number = 10): Promise<FioInter
   return fios;
 };
 
-// Fix: Change return type to Promise<StudentInterface>
 export const addNRStudentDb = async (student: StudentInterface): Promise<StudentInterface> => {
   const db = new sqlite3.Database(process.env.DB ?? './db/vki-web.db');
 
   const result = await new Promise<StudentInterface>((resolve, reject) => {
-    const sql = 'INSERT INTO student(first_name, last_name, middle_name, groupId) VALUES(?, ?, ?, ?) RETURNING id';
+    const sql = `
+      INSERT INTO student(first_name, last_name, middle_name, groupId)
+      VALUES(?, ?, ?, ?)
+      RETURNING id, first_name, last_name, middle_name, groupId
+    `;
+
     db.get(sql, [student.first_name, student.last_name, student.middle_name, student.groupId], (err, row) => {
       if (err) {
         reject(err);
         db.close();
         return;
       }
-      // @ts-ignore
-      const newStudent = { ...student, id: row.id };
-      resolve(newStudent);
+
+      resolve(row as StudentInterface);
       db.close();
     });
   });
 
   return result;
-}
+};
