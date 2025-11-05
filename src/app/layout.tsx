@@ -5,6 +5,7 @@ import queryClient from '@/api/reactQueryClient';
 import { getGroupsApi } from '@/api/groupsApi';
 import { getStudentsApi } from '@/api/studentsApi';
 import GroupInterface from '@/types/GroupInterface';
+import StudentInterface from '@/types/StudentInterface';
 import Header from '@/components/layout/Header/Header';
 import Footer from '@/components/layout/Footer/Footer';
 import Main from '@/components/layout/Main/Main';
@@ -14,13 +15,13 @@ import type { Metadata } from 'next';
 import '@/styles/globals.scss';
 
 export const metadata: Metadata = {
-  title: 'Вэб разработка ВКИ - Next.js шаблон',
+  title: 'Веб разработка ВКИ - Next.js шаблон',
   description: 'Шаблон для веб-разработки с использованием Next.js, React Hook Form, Yup, SCSS, Eslint, TanStack Query (React Query)',
 };
 
 const RootLayout = async ({ children }: Readonly<{children: React.ReactNode}>) => {  
   let groups: GroupInterface[];
-  let students: GroupInterface[];
+  let students: StudentInterface[];
 
   // выполняется на сервере - загрузка групп
   await queryClient.prefetchQuery({

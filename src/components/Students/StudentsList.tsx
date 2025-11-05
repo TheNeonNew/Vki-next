@@ -37,9 +37,9 @@ const StudentsList = () => {
           {students.map((student: StudentInterface, index: number) => (
             <tr key={student.id ? `student-${student.id}` : `temp-${index}`}>
               <td className={styles.td}>{index + 1}</td>
-              <td className={styles.td}>{student.last_name}</td>
-              <td className={styles.td}>{student.first_name}</td>
-              <td className={styles.td}>{student.middle_name}</td>
+              <td className={styles.td}>{student.lastName}</td>
+              <td className={styles.td}>{student.firstName}</td>
+              <td className={styles.td}>{student.middleName}</td>
               <td className={styles.td}>
                 {isNaN(student.groupId) ? "N/A" : student.groupId}
               </td>
