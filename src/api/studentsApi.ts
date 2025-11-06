@@ -17,6 +17,8 @@ export const getStudentsApi = async (): Promise<StudentInterface[]> => {
 };
 
 export const deleteStudentApi = async (studentId: number): Promise<void> => {
+  console.log('deleteStudentApi', studentId);
+  debugger;
   try {
     const response = await fetch(`/api/students/${studentId}`, {
       method: 'DELETE',
@@ -25,6 +27,8 @@ export const deleteStudentApi = async (studentId: number): Promise<void> => {
     if (!response.ok) {
       throw new Error(`Ошибка HTTP: ${response.status} ${response.statusText}`);
     }
+    console.log('deleteStudentApi ok', studentId);
+    debugger; 
   } catch (err) {
     console.log('>>> deleteStudentApi', err);
     throw err;

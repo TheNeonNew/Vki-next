@@ -9,6 +9,8 @@ import AddStudent from '../AddStudent/AddStudent';
 const StudentsList = () => {
   const { students, deleteStudentMutate, fillStudentsMutate, addStudentsMutate } = useStudents();
   const onSubmitHandler = (student: StudentInterface): void => {
+    debugger;
+    console.log('Добавление студента', student);
     addStudentsMutate(student);
   };
   const [isAddOpen, setIsAddOpen] = useState(false);
