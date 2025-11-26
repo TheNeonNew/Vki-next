@@ -4,14 +4,21 @@ import StudentInterface from '@/types/StudentInterface';
 import styles from './StudentsList.module.scss';
 import Student from './Student';
 import { useState } from 'react';
-import AddStudent from '../AddStudent/AddStudent';
+import AddStudent, {type FormFields} from '../AddStudent/AddStudent';
+import { v4 as uuidv4 } from 'uuid';
+import useGroups from '@/hooks/useGroups';
 
 const StudentsList = () => {
   const { students, deleteStudentMutate, fillStudentsMutate, addStudentsMutate } = useStudents();
-  const onSubmitHandler = (student: StudentInterface): void => {
+  const onSubmitHandler = (studentFormField: FormFields): void => {
+    console.log('Добавление студента', studentFormField);
     debugger;
-    console.log('Добавление студента', student);
-    addStudentsMutate(student);
+
+    addStudentsMutate({
+      id: -1,
+      ...studentFormField,
+      uuid: uuidv4(),
+    });
   };
   const [isAddOpen, setIsAddOpen] = useState(false);
   const handleClick = () => {
@@ -56,7 +63,7 @@ const StudentsList = () => {
       </table>
       <button onClick={() => fillStudentsMutate()}>Заполнить Список Студентов</button>
       <button onClick={handleClick}>Добавить студента</button>
-      {isAddOpen && <AddStudent onSubmit={onSubmitHandler} onClose={handleClose} />}
+      {isAddOpen && <AddStudent onAdd={onSubmitHandler} onClose={handleClose} />}
 
     </>
   );

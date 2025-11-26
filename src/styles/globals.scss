@@ -11,27 +11,27 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color: #d8d8d8;
+    --color: #e1ecea;
     --color2: #000;
-    --color3: #F00;
+    --color3: rgb(235, 235, 95);
     --background: #000;
-    --background2: #1E1E1E;
-    --background3: #BABABA;
+    --background2: #444444;
+    --background3: #81acc59f;
   }
 }
 
 @font-face {
-  font-family: 'PTSans';
-  src: local('PTSans'), local('PTSans'),
-  url('/fonts/PTSansRegular.woff') format('woff');
+  font-family: 'Times New Roman';
+  src: local('Times New Roman'), local('Times New Roman'),
+  url('/fonts/public/fonts/Times New Roman.ttf') format('ttf');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'PTSans';
-  src: local('PTSans'), local('PTSans'),
-  url('/fonts/PTSansBold.woff') format('woff');
+  font-family: 'Times New Roman';
+  src: local('Times New Roman'), local('Times New Roman'),
+  url('/fonts/public/fonts/Times New Roman Bold.ttf') format('ttf');
   font-weight: 700;
   font-style: normal;
 }

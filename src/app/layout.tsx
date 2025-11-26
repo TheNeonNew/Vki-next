@@ -1,11 +1,9 @@
 import { dehydrate } from '@tanstack/react-query';
-
+import { cookies } from 'next/headers';
+import 'reflect-metadata';
 import TanStackQuery from '@/containers/TanStackQuery';
 import queryClient from '@/api/reactQueryClient';
 import { getGroupsApi } from '@/api/groupsApi';
-import { getStudentsApi } from '@/api/studentsApi';
-import GroupInterface from '@/types/GroupInterface';
-import StudentInterface from '@/types/StudentInterface';
 import Header from '@/components/layout/Header/Header';
 import Footer from '@/components/layout/Footer/Footer';
 import Main from '@/components/layout/Main/Main';
@@ -13,45 +11,45 @@ import Main from '@/components/layout/Main/Main';
 import type { Metadata } from 'next';
 
 import '@/styles/globals.scss';
+import { META_DESCRIPTION, META_TITLE } from '@/constants/meta';
+import { getStudentsApi } from '@/api/studentsApi';
+import { verifyAccessToken } from '@/utils/jwt';
+// import UserInterface from '@/types/UserInterface';
 
 export const metadata: Metadata = {
-  title: 'Веб разработка ВКИ - Next.js шаблон',
-  description: 'Шаблон для веб-разработки с использованием Next.js, React Hook Form, Yup, SCSS, Eslint, TanStack Query (React Query)',
+  title: META_TITLE,
+  description: META_DESCRIPTION,
 };
 
-const RootLayout = async ({ children }: Readonly<{children: React.ReactNode}>) => {  
-  let groups: GroupInterface[];
-  let students: StudentInterface[];
+const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>): Promise<React.ReactElement> => {
+  const cookieStore = await cookies();
+
+  const accessToken = cookieStore.get('accessToken')?.value;
+
+  const userFromServer = verifyAccessToken(accessToken);
+
+  // выполняется на сервере - загрузка студентов
+  await queryClient.prefetchQuery({
+    queryKey: ['students'],
+    queryFn: getStudentsApi,
+  });
 
   // выполняется на сервере - загрузка групп
   await queryClient.prefetchQuery({
-    queryKey: ['groups'], 
-    queryFn: async () => {
-      groups = await getGroupsApi();
-      console.log('Groups', groups);
-      return groups;
-    }
+    queryKey: ['groups'],
+    queryFn: getGroupsApi,
   });
 
-  
-
-  // выполняется на сервере - загрузка групп
-  await queryClient.prefetchQuery({
-    queryKey: ['students'], 
-    queryFn: async () => {
-      students = await getStudentsApi();
-      console.log('Students', students);
-      return students;
-    }
-  });
-
+  // дегидрация состояния
   const state = dehydrate(queryClient, { shouldDehydrateQuery: () => true });
 
   return (
     <TanStackQuery state={state}>
       <html lang="ru">
         <body>
-          <Header />
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-expect-error */}
+          <Header userFromServer={userFromServer} />
           <Main>
             <>{children}</>
           </Main>

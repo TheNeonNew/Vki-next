@@ -1,68 +1,63 @@
-'use client';
-
-import { useForm } from 'react-hook-form';
+import type StudentInterface from '@/types/StudentInterface';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import styles from './AddStudent.module.scss';
+import type GroupInterface from '@/types/GroupInterface';
 
-import StudentInterface from '@/types/StudentInterface';
+export type FormFields = Pick<StudentInterface, 'firstName' | 'lastName' | 'middleName' | 'groupId'>;
 
 interface Props {
-  onSubmit: (student: StudentInterface) => void;
+  onAdd: (studentForm: FormFields) => void;
   onClose: () => void;
-};
+  groups: GroupInterface[];
+}
 
-const AddStudent = ({ onSubmit, onClose }: Props): React.ReactElement => {
-  const { register, handleSubmit, formState: { errors }, reset} = useForm<StudentInterface>();
+const AddStudent = ({ onAdd, groups }: Props): React.ReactElement => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormFields>();
 
-  const onSubmitHandler = (student: StudentInterface) => {
-debugger;
-    console.log(student);
-    onSubmit(student);
-    reset();
-  };
-
+  const onSubmit: SubmitHandler<FormFields> = studentForm => onAdd(studentForm);
   const onCloseHandler = {}
 
   return (
-  <div className={styles.Students}>
-    <form onSubmit={handleSubmit(onSubmitHandler)}>
-      <label htmlFor="lastName">Фамилия</label>
-      <input
-        id="lastName"
-        {...register('lastName', { required: 'Поле фамилия не может быть пустым' })}
-      />
-      {errors?.lastName && <p>{errors.lastName.message}</p>}
-      <br />
+    <div className={styles.AddStudent}>
+      <h2>Добавления студента</h2>
 
-      <label htmlFor="firstName">Имя</label>
-      <input
-        id="firstName"
-        {...register('firstName', { required: 'Поле имя не может быть пустым' })}
-      />
-      {errors?.firstName && <p>{errors.firstName.message}</p>}
-      <br />
+      <form onSubmit={handleSubmit(onSubmit)}>
 
-      <label htmlFor="middleName">Отчество</label>
-      <input
-        id="middleName"
-        {...register('middleName', { required: 'Поле отчество не может быть пустым' })}
-      />
-      {errors?.middleName && <p>{errors.middleName.message}</p>}
-      <br />
+        <input
+          placeholder="Фамилия"
+          {...register('lastName', { required: true })}
+        />
+        {errors.lastName && <div>Обязательное поле</div>}
 
-      <label htmlFor="groupId">Группа</label>
-      <input
-        id="groupId"
-        type="number"
-        {...register('groupId', { required: 'Поле группа не может быть пустым', valueAsNumber: true })}
-      />
-      {errors?.groupId && <p>{errors.groupId.message}</p>}
-      <br />
+        <input
+          placeholder="Имя"
+          {...register('firstName', { required: true })}
+        />
+        {errors.firstName && <div>Обязательное поле</div>}
 
-      <button type="submit">Добавить</button>
-      <button type="button" onClick={onClose}>Отмена</button>
-    </form>
-  </div>
-);
+        <input
+          placeholder="Отчество"
+          {...register('middleName', { required: true })}
+        />
+        {errors.middleName && <div>Обязательное поле</div>}
+
+        <select id="mySelect" {...register('groupId', { required: true })}>
+          <option value="">--Выберите группу--</option>
+          {groups.map(group => (
+            <option value={group.id} key={group.id}>{group.name}</option>
+          ))}
+        </select>
+
+        <input type="submit" value="Добавить" />
+        <input type="close" value="Отмена" />
+      </form>
+
+    </div>
+  );
 };
 
 export default AddStudent;

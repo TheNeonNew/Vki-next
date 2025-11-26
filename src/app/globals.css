@@ -24,6 +24,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+input {
+  border-radius: 10;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
