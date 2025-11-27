@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server';
-import { getGroupsDb } from '@/db/groupDb';
+import { groupService } from '@/services/GroupService';
+import { type NextRequest } from 'next/server';
 
-export async function GET() {
-  try {
-    const groups = await getGroupsDb();
-    return NextResponse.json(groups);
-  } catch (err) {
-    console.error('Error in /api/groups:', err);
-    return NextResponse.json({ error: 'Failed to fetch groups' }, { status: 500 });
-  }
-}
+export async function GET(): Promise<Response> {
+  const groups = await groupService.getGroups();
+
+  return new Response(JSON.stringify(groups), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};

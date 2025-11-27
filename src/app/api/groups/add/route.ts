@@ -1,13 +1,15 @@
-import { studentService } from '@/services/StudentService';
+import { groupService } from '@/services/GroupService';
 import { type NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest): Promise<Response> {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const newStudentsList = await studentService.addRandomStudents(5);
+  const group = await req.json();
+  //delete group['id']; TODO: implement DELETE for group
+  const newGroup = await groupService.addGroup(group);
 
-  console.log(newStudentsList);
-  return new Response(JSON.stringify(newStudentsList), {
+  console.log(newGroup);
+  return new Response(JSON.stringify(newGroup), {
     status: 201,
     headers: {
       'Content-Type': 'application/json',

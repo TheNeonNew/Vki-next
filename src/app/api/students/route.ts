@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server';
-import { getStudentsDb} from '@/db/studentsDb';
+import { studentService } from '@/services/StudentService';
+import { type NextRequest } from 'next/server';
 
-export async function GET() {
-  try {
-    const students = await getStudentsDb();
-    return NextResponse.json(students);
-  } catch (err) {
-    console.error('Error in /api/students:', err);
-    return NextResponse.json({ error: 'Failed to fetch students' }, { status: 500 });
-  }
-}
+export async function GET(): Promise<Response> {
+  const students = await studentService.getStudents();
+
+  return new Response(JSON.stringify(students), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
