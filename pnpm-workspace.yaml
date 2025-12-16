@@ -1,0 +1,14 @@
+ignoredBuiltDependencies:
+  - '@parcel/watcher'
+  - '@prisma/engines'
+  - sharp
+  - sqlite3
+  - unrs-resolver
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@prisma/engines'
+  - prisma
+  - sharp
+  - sqlite3
+  - unrs-resolver
